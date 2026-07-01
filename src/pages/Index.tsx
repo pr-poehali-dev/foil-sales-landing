@@ -94,7 +94,7 @@ const Index = () => {
         <div className="container flex items-center justify-between h-16">
           <a href="#" className="flex items-center gap-2 font-display font-700 text-xl tracking-wide">
             <Icon name="Layers" className="text-primary" size={26} />
-            FOIL<span className="text-gradient">PRO</span>
+            ОЛИМ<span className="text-gradient">ПИЯ</span>
           </a>
           <nav className="hidden lg:flex items-center gap-7 text-sm text-muted-foreground">
             {nav.map((n) => (
@@ -323,7 +323,7 @@ const Index = () => {
         <div className="container flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-2 font-display font-700 text-lg text-foreground">
             <Icon name="Layers" className="text-primary" size={22} />
-            FOIL<span className="text-gradient">PRO</span>
+            ОЛИМ<span className="text-gradient">ПИЯ</span>
           </div>
           <p>© 2026 FOILPRO. Производство и поставка алюминиевой фольги.</p>
         </div>

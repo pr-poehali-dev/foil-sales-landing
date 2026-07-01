@@ -49,14 +49,14 @@ def handler(event: dict, context) -> dict:
     recipient = os.environ.get('RECIPIENT_EMAIL')
 
     text = (
-        'Новая заявка с сайта FOILPRO\n\n'
+        'Новая заявка с сайта Олимпия\n\n'
         f'Имя: {name}\n'
         f'Контакт: {contact}\n'
         f'Сообщение: {message or "—"}\n'
     )
 
     msg = MIMEText(text, 'plain', 'utf-8')
-    msg['Subject'] = Header('Новая заявка с сайта FOILPRO', 'utf-8')
+    msg['Subject'] = Header('Новая заявка с сайта Олимпия', 'utf-8')
     msg['From'] = user
     msg['To'] = recipient
 
