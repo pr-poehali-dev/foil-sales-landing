@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import func2url from '../../backend/func2url.json';
 
 const HERO_IMG = 'https://cdn.poehali.dev/projects/669d20ef-baad-48f0-a733-86439ed2c669/files/255e3ff0-250a-460b-b8cc-f7f9108e2e2f.jpg';
 
@@ -57,6 +60,33 @@ const reviews = [
 ];
 
 const Index = () => {
+  const { toast } = useToast();
+  const [form, setForm] = useState({ name: '', contact: '', message: '' });
+  const [loading, setLoading] = useState(false);
+
+  const submitLead = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.contact.trim()) {
+      toast({ title: 'Заполните имя и контакт', variant: 'destructive' });
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch(func2url['send-lead'], {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error();
+      toast({ title: 'Заявка отправлена!', description: 'Мы свяжемся с вами в течение часа.' });
+      setForm({ name: '', contact: '', message: '' });
+    } catch {
+      toast({ title: 'Не удалось отправить', description: 'Попробуйте позже или позвоните нам.', variant: 'destructive' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* NAV */}
@@ -274,12 +304,12 @@ const Index = () => {
                   ))}
                 </div>
               </div>
-              <form className="glass rounded-2xl p-7 space-y-4" onSubmit={(e) => e.preventDefault()}>
-                <input placeholder="Ваше имя" className="w-full h-12 rounded-xl bg-background/40 border border-white/10 px-4 outline-none focus:border-primary/50 transition-colors" />
-                <input placeholder="Телефон или email" className="w-full h-12 rounded-xl bg-background/40 border border-white/10 px-4 outline-none focus:border-primary/50 transition-colors" />
-                <textarea placeholder="Какая фольга и объём вам нужны?" rows={3} className="w-full rounded-xl bg-background/40 border border-white/10 px-4 py-3 outline-none focus:border-primary/50 transition-colors resize-none" />
-                <Button className="w-full bg-primary text-primary-foreground hover:opacity-90 rounded-full h-12 font-600">
-                  Получить прайс-лист
+              <form className="glass rounded-2xl p-7 space-y-4" onSubmit={submitLead}>
+                <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ваше имя" className="w-full h-12 rounded-xl bg-background/40 border border-white/10 px-4 outline-none focus:border-primary/50 transition-colors" />
+                <input value={form.contact} onChange={(e) => setForm({ ...form, contact: e.target.value })} placeholder="Телефон или email" className="w-full h-12 rounded-xl bg-background/40 border border-white/10 px-4 outline-none focus:border-primary/50 transition-colors" />
+                <textarea value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Какая фольга и объём вам нужны?" rows={3} className="w-full rounded-xl bg-background/40 border border-white/10 px-4 py-3 outline-none focus:border-primary/50 transition-colors resize-none" />
+                <Button type="submit" disabled={loading} className="w-full bg-primary text-primary-foreground hover:opacity-90 rounded-full h-12 font-600">
+                  {loading ? 'Отправляем...' : 'Получить прайс-лист'}
                 </Button>
                 <p className="text-xs text-muted-foreground text-center">Нажимая кнопку, вы соглашаетесь с политикой обработки данных</p>
               </form>
